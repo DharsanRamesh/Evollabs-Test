@@ -53,8 +53,8 @@ Automation and tests
     - Applies user definitions from `teleport/resources/users.yaml`.
     - Generates non‑interactive identity files for `engineer` and `readonly` users.
 - **Smoke tests** (`make test` / `tests/run.sh`):
-  1. **SSH allowed**: `engineer` can SSH into the lab node (`ssh_service`) via Teleport.
-  2. **App allowed**: `engineer` can log into and reach the `demo-app` application via Teleport Application Access.
+  1. **SSH allowed**: `engineer` can authenticate to the SSH node via Teleport (shell launch is skipped due to the distroless image, see note below).
+  2. **App allowed**: `engineer` can log into the `demo-app` application via Teleport Application Access (`tsh app login` succeeds; the CLI prints a working `curl` example).
   3. **Access denied**: `readonly` user is denied SSH access (RBAC denies shell logins).
 
 Teardown
@@ -90,6 +90,9 @@ Security hygiene
   - User identity files used by tests are stored under `teleport/identities` and can be safely deleted.
 - Configuration uses a **lab‑only static token** in `teleport/teleport.yaml`.  
   In a production scenario, you would replace this with short‑lived join tokens or Auto‑discovery.
+ - The SSH service runs inside a **distroless** container that does not ship with a login shell.  
+   Successful SSH authentication for the `engineer` user currently surfaces as a specific `fork/exec /sbin/nologin` error;  
+   the tests treat this as a valid "allowed" path, while `readonly` is still explicitly denied.
 
 Files and layout
 ----------------

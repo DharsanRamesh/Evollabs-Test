@@ -1,0 +1,43 @@
+kind: role
+version: v5
+metadata:
+  name: admin
+spec:
+  options:
+    max_session_ttl: 8h
+  allow:
+    logins: ["root", "admin"]
+    rules:
+      - resources: ["*"]
+        verbs: ["*"]
+---
+kind: role
+version: v5
+metadata:
+  name: engineer
+spec:
+  options:
+    max_session_ttl: 4h
+  allow:
+    logins: ["root", "ubuntu"]
+    node_labels:
+      "env": ["lab"]
+      "service": ["ssh-node"]
+    app_labels:
+      "env": ["lab"]
+      "service": ["demo-app"]
+---
+kind: role
+version: v5
+metadata:
+  name: readonly
+spec:
+  options:
+    max_session_ttl: 1h
+  allow:
+    app_labels:
+      "env": ["lab"]
+      "service": ["demo-app"]
+  deny:
+    logins: ["root", "ubuntu"]
+

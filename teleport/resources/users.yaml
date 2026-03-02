@@ -1,0 +1,21 @@
+kind: user
+version: v2
+metadata:
+  name: admin
+spec:
+  roles: ["admin"]
+---
+kind: user
+version: v2
+metadata:
+  name: engineer
+spec:
+  roles: ["engineer"]
+---
+kind: user
+version: v2
+metadata:
+  name: readonly
+spec:
+  roles: ["readonly"]
+

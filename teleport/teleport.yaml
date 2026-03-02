@@ -1,0 +1,45 @@
+version: v3
+
+teleport:
+  nodename: teleport-lab
+  data_dir: /var/lib/teleport
+  log:
+    output: stderr
+    severity: INFO
+
+auth_service:
+  enabled: yes
+  listen_addr: 0.0.0.0:3025
+  cluster_name: "teleport-lab.local"
+  authentication:
+    type: local
+  license_file: ""
+
+proxy_service:
+  enabled: yes
+  public_addr: ["localhost:3080"]
+  web_listen_addr: 0.0.0.0:3080
+  listen_addr: 0.0.0.0:3023
+  # app proxy listener
+  https_keypairs: []
+
+ssh_service:
+  enabled: yes
+  labels:
+    env: lab
+    service: ssh-node
+  commands:
+    - name: hostname
+      command: ["hostname"]
+      period: 1m
+
+app_service:
+  enabled: yes
+  debug_app: false
+  apps:
+    - name: "demo-app"
+      uri: "http://teleport-demo-app:8000"
+      labels:
+        env: lab
+        service: demo-app
+
